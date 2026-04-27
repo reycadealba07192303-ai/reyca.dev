@@ -10,8 +10,18 @@ const Booking = require('./models/Booking');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*', // Allow all origins for development
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
+
+// Log every request to help debug "Failed to fetch"
+app.use((req, res, next) => {
+  console.log(`📡 ${req.method} ${req.path} - ${new Date().toISOString()}`);
+  next();
+});
 
 // ═══════════════════════════════════════════
 // 1. MongoDB Connection
