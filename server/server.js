@@ -45,95 +45,134 @@ oauth2Client.setCredentials({
 const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
 // ═══════════════════════════════════════════
-// 4. AI Knowledge Base & System Prompt
+// 4. AI Knowledge Base & Intent Map
 // ═══════════════════════════════════════════
-const REYCA_KB = `
-You are Reyca's AI Assistant on her portfolio website.
+const KNOWLEDGE_BASE = {
+  ABOUT: `Reyca Dela Cruz De Alba is a Data Analyst, AI Engineer, and Full-Stack Developer based in Sampaloc, Manila. She is a BS IT student at National University, a consistent Dean's Lister, and an Academic Full Scholar. She's known for her passion in AI and automation.`,
+  PROJECTS: `Reyca's key projects include:
+1. Gabay Alalay: A VAWC Management System.
+2. Lawbot AI: An AI-Powered Legal Assistant.
+3. IntelliAccess: An AI Vehicle Control System.
+4. 903rd Battalion IS: A Record Management System.
+5. InCloud Thesis: An Integrated Cloud-Based Inventory System.
+6. SmartCash: A Financial Literacy Learning Management System.`,
+  TECH_STACK: `Reyca is proficient in:
+- Frontend: React.js, Vite, Tailwind CSS, Shadcn UI.
+- Backend: Node.js, Express.js, MongoDB, Python (Flask/FastAPI).
+- AI/Data: Gemini API, OpenAI, TensorFlow, Pandas, Power BI.
+- Tools: Git, Docker, Google Cloud, Figma.`,
+  EDUCATION: `Reyca is currently pursuing a BS in Information Technology at National University (2022-Present) where she is a Dean's Lister. She graduated With High Honors from Cristo Rey High School.`,
+  EXPERIENCE: `Reyca has experience as a Data Analyst & AI Engineer Intern at SPMadrid Law and Associates (2026). She was also the Lead Developer and Project Manager for the InCloud Thesis Project (2025).`,
+  CONTACT: `You can reach Reyca through:
+- Facebook: DealbaReyca072303
+- LinkedIn: Reyca De Alba
+- GitHub: reycadealba07192303-ai
+- Messenger: m.me/DealbaReyca072303`,
+};
 
-ABOUT REYCA:
-- Name: Reyca Dela Cruz De Alba
-- Roles: Data Analyst, AI Engineer, Full-Stack Developer
-- Location: Sampaloc, Manila, Philippines
-- Education: BS IT at National University (Consistent Dean's Lister, Academic Full Scholar)
-- Senior High: Cristo Rey High School (Graduated With High Honors)
-- Socials: FB (DealbaReyca072303), LinkedIn, GitHub, Messenger
-
-PROJECTS:
-- Gabay Alalay: VAWC Management System
-- Lawbot AI: AI-Powered Legal Assistant
-- IntelliAccess: AI Vehicle Control System
-- 903rd Battalion IS: Record Management System
-- InCloud Thesis: Integrated Cloud-Based Inventory System
-- SmartCash: Financial Literacy LMS
+const SYSTEM_CORE = `
+You are Reyca's AI Assistant. You are warm, professional, and helpful.
+You represent Reyca Dela Cruz De Alba.
 
 STRICT RULES:
-1. ONLY answer questions about Reyca's background, skills, projects, and services.
-2. If asked about anything unrelated (math, trivia, other people, etc.), respond: "I can only answer questions about Reyca's professional background and services."
-3. Be professional, warm, and helpful.
+1. ONLY answer based on the facts provided.
+2. If asked about unrelated topics, politely say: "I can only answer questions about Reyca's professional background and services."
+3. Keep your tone human, not like a robot. Use "Reyca" or "she" when referring to her, or "I" if you are acting as her personal assistant.
 
 BOOKING FLOW:
-When a user wants to book/hire Reyca or schedule a consultation, follow these steps:
-- Ask for their Full Name
-- Ask for their Contact Number
-- Ask for their Facebook Messenger username/link
-- Ask what kind of project or service they need (brief description)
-- Ask for their preferred Date and Time for the consultation (Available hours: Mon-Fri, 9:00 AM to 5:00 PM)
-
-IMPORTANT: Once ALL 5 pieces of info are collected, you MUST append this EXACT JSON block at the very end of your message (after your friendly confirmation):
-
+If the user wants to book or hire Reyca, you MUST collect:
+- Full Name
+- Contact Number
+- Messenger Link
+- Project Details
+- Preferred Date/Time (Mon-Fri, 9-5 PM)
+Once ALL 5 are collected, append:
 \`\`\`BOOKING_DATA
-{"name":"<full name>","contact":"<contact number>","messenger":"<messenger link>","details":"<project description>","date":"<YYYY-MM-DD>","time":"<HH:mm>"}
+{"name":"...","contact":"...","messenger":"...","details":"...","date":"YYYY-MM-DD","time":"HH:mm"}
 \`\`\`
-
-Do NOT generate this JSON until ALL 5 fields are provided by the user.
 `;
 
 // ═══════════════════════════════════════════
-// 5. Gemini API via native fetch (bypasses SDK version issues)
-// Gemini API via native fetch (bypasses SDK version issues)
-async function callGemini(prompt) {
-  const apiKey = process.env.GEMINI_API_KEY;
+// 5. Gemini API (Streaming Support & Key Rotation)
+// ═══════════════════════════════════════════
+async function callGeminiStream(prompt, onChunk) {
+  const apiKeys = [
+    process.env.GEMINI_API_KEY,
+    process.env.GEMINI_API_KEY_2,
+    process.env.GEMINI_API_KEY_3
+  ].filter(Boolean);
   
-  // Model configurations - specific to the available models on your account
   const models = [
-    'gemini-2.5-flash',
+    'gemini-2.0-flash-exp', 
+    'gemini-1.5-flash', 
     'gemini-flash-latest',
-    'gemini-2.0-flash-lite-001',
-    'gemini-3-flash-preview'
+    'gemini-1.5-pro-latest',
+    'gemini-1.5-pro'
   ];
-  
-  for (const modelName of models) {
-    try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      });
 
-      const data = await response.json();
-      
-      if (response.ok && data.candidates && data.candidates[0]) {
-        console.log(`🤖 Using model: ${modelName}`);
-        return data.candidates[0].content.parts[0].text;
+  for (const apiKey of apiKeys) {
+    for (const modelName of models) {
+      try {
+        console.log(`🤖 Attempting model: ${modelName}`);
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:streamGenerateContent?alt=sse&key=${apiKey}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          const errMsg = errData.error?.message || response.statusText;
+          console.warn(`⚠️ Model ${modelName} failed:`, errMsg);
+          
+          // Switch model or key on rate limit or high demand
+          if (response.status === 429 || response.status === 503 || errMsg.toLowerCase().includes('demand') || errMsg.toLowerCase().includes('limit')) {
+            continue; 
+          }
+          throw new Error(errMsg);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                const text = data.candidates[0].content.parts[0].text;
+                if (text) {
+                  fullText += text;
+                  onChunk(text);
+                }
+              } catch (e) { /* partial chunk */ }
+            }
+          }
+        }
+        return fullText;
+      } catch (err) {
+        if (err.message.toLowerCase().includes('demand') || err.message.toLowerCase().includes('limit')) continue;
+        console.error(`❌ Fatal error with ${modelName}:`, err.message);
       }
-      
-      console.warn(`⚠️ Model ${modelName} failed:`, data.error?.message || response.statusText);
-
-      // If 404 or Quota exceeded (limit 0), try next model
-      if (response.status === 404 || data.error?.message?.includes('limit: 0')) continue;
-      
-      // Other error, throw
-      throw new Error(data.error?.message || 'Unknown Gemini error');
-    } catch (err) {
-      if (err.message.includes('not found') || err.message.includes('limit: 0')) continue;
-      throw err;
     }
   }
-  
-  throw new Error('No available Gemini model found or Quota exceeded. Please check your API key settings.');
+  throw new Error('All AI models are currently overwhelmed or limits exceeded. Please try again in a few minutes.');
+}
+
+async function callGemini(prompt) {
+  let result = "";
+  await callGeminiStream(prompt, (chunk) => { result += chunk; });
+  return result;
 }
 
 // ═══════════════════════════════════════════
@@ -213,43 +252,69 @@ async function sendEmailNotification(bookingData) {
 }
 
 // ═══════════════════════════════════════════
-// 8. MAIN CHAT ENDPOINT
-// Chat → AI → Extract → Save → Calendar → Email
+// 8. MAIN CHAT ENDPOINT (Hybrid Logic)
 // ═══════════════════════════════════════════
 app.post('/api/chat', async (req, res) => {
   const { userMessage, conversationId } = req.body;
 
+  // Set headers for SSE (Streaming)
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
   try {
-    // Build conversation context for AI
-    let context = REYCA_KB;
+    // 1. INTENT DETECTION
+    const intentPrompt = `
+Analyze this user message: "${userMessage}"
+Categories: ABOUT, PROJECTS, TECH_STACK, EDUCATION, EXPERIENCE, CONTACT, BOOKING, GENERAL.
+Return ONLY the category name. If it doesn't fit strictly, return GENERAL.
+Category:`;
     
-    // Load previous messages for context if conversation exists
+    const intent = (await callGemini(intentPrompt)).trim().toUpperCase();
+    console.log(`🎯 Detected Intent: ${intent}`);
+
+    // 2. CONTEXT BUILDING
+    let history = "";
     if (conversationId && mongoose.Types.ObjectId.isValid(conversationId)) {
       const existingConv = await Conversation.findById(conversationId);
-      if (existingConv && existingConv.messages.length > 0) {
-        const history = existingConv.messages.slice(-10).map(m => 
+      if (existingConv) {
+        history = existingConv.messages.slice(-6).map(m => 
           `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.text}`
         ).join('\n');
-        context += `\n\nCONVERSATION HISTORY:\n${history}`;
       }
     }
 
-    const currentDate = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', dateStyle: 'full', timeStyle: 'long' });
-    const fullPrompt = `[SYSTEM NOTE: The current date and time in Manila is ${currentDate}]\n\n${context}\n\nUser: ${userMessage}`;
-    let botResponse = await callGemini(fullPrompt);
+    const facts = KNOWLEDGE_BASE[intent] || "";
+    const currentDate = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
 
-    // ── SMART TRIGGER: Check for Booking Data ──
-    const bookingMatch = botResponse.match(/```BOOKING_DATA\s*\n?([\s\S]*?)\n?```/);
-    
+    const finalPrompt = `
+${SYSTEM_CORE}
+[Current Date: ${currentDate}]
+[History]:
+${history}
+
+[Facts for this request]:
+${facts}
+
+[Task]: Respond to the user's message naturally using the facts above.
+User: ${userMessage}
+Assistant:`;
+
+    let fullBotResponse = "";
+
+    // 3. STREAM RESPONSE
+    await callGeminiStream(finalPrompt, (chunk) => {
+      fullBotResponse += chunk;
+      res.write(`data: ${JSON.stringify({ chunk })}\n\n`);
+    });
+
+    // 4. POST-PROCESSING (Booking Detection)
+    const bookingMatch = fullBotResponse.match(/```BOOKING_DATA\s*\n?([\s\S]*?)\n?```/);
     if (bookingMatch) {
       try {
         const bookingData = JSON.parse(bookingMatch[1].trim());
-        
-        // VALIDATE: All fields must be present
         if (bookingData.name && bookingData.contact && bookingData.messenger && bookingData.details && bookingData.date && bookingData.time) {
-          console.log('\n🚀 BOOKING AUTOMATION TRIGGERED!');
-
-          // Step 1: Save to MongoDB
+          console.log('🚀 Automation Triggered');
           const newBooking = new Booking({
             name: bookingData.name,
             contact: bookingData.contact,
@@ -259,56 +324,35 @@ app.post('/api/chat', async (req, res) => {
             scheduledAt: new Date(`${bookingData.date}T${bookingData.time}:00`)
           });
           await newBooking.save();
-          console.log('💾 Saved to database');
-
-          // Step 2: Create Google Calendar Event
-          try {
-            await createCalendarEvent(bookingData);
-          } catch (calErr) {
-            console.error('📅 Calendar Error:', calErr.message);
-          }
-
-          // Step 3: Send Email Notification
-          try {
-            await sendEmailNotification(bookingData);
-          } catch (emailErr) {
-            console.error('📧 Email Error:', emailErr.message);
-          }
-
-          // Clean the JSON from the user-facing response
-          botResponse = botResponse.replace(/```BOOKING_DATA[\s\S]*?```/, '').trim();
-          botResponse += "\n\n✅ Your booking has been saved! I've also added a reminder to Reyca's calendar and sent her an email notification. She'll reach out to you soon!";
+          await createCalendarEvent(bookingData);
+          await sendEmailNotification(bookingData);
           
-          console.log('✅ AUTOMATION COMPLETE!\n');
+          const successMsg = "\n\n✅ Your booking has been saved! Reyca has been notified.";
+          fullBotResponse += successMsg;
+          res.write(`data: ${JSON.stringify({ chunk: successMsg })}\n\n`);
         }
-      } catch (parseErr) {
-        console.error('JSON Parse Error:', parseErr.message);
-      }
+      } catch (e) { console.error('Booking Parse Error', e); }
     }
 
-    // ── Save conversation to MongoDB ──
+    // 5. SAVE CONVERSATION
     if (conversationId && mongoose.Types.ObjectId.isValid(conversationId)) {
       await Conversation.findByIdAndUpdate(conversationId, {
-        $push: { messages: [
-          { role: 'user', text: userMessage },
-          { role: 'bot', text: botResponse }
-        ]}
+        $push: { messages: [{ role: 'user', text: userMessage }, { role: 'bot', text: fullBotResponse }] }
       });
-      res.json({ text: botResponse });
+      res.write(`data: ${JSON.stringify({ done: true, conversationId })}\n\n`);
     } else {
       const newConv = new Conversation({
-        messages: [
-          { role: 'user', text: userMessage },
-          { role: 'bot', text: botResponse }
-        ]
+        messages: [{ role: 'user', text: userMessage }, { role: 'bot', text: fullBotResponse }]
       });
       await newConv.save();
-      res.json({ text: botResponse, conversationId: newConv._id });
+      res.write(`data: ${JSON.stringify({ done: true, conversationId: newConv._id })}\n\n`);
     }
 
+    res.end();
   } catch (error) {
     console.error('❌ Chat Error:', error.message);
-    res.status(500).json({ error: error.message || 'AI Error' });
+    res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
+    res.end();
   }
 });
 
