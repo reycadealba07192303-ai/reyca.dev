@@ -29,7 +29,7 @@ export function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
     setMessages(prev => [...prev, { role: 'bot', text: '' }]);
 
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+      const backendUrl = (import.meta as any).env.VITE_BACKEND_URL || 'http://localhost:5000';
       const response = await fetch(`${backendUrl}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
