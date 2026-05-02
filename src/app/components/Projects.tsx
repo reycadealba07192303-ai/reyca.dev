@@ -39,6 +39,18 @@ export const systemProjects = [
   },
 ];
 
+export const mobileProjects = [
+  {
+    name: 'Autodemy',
+    description: 'Smart Academic Management System with AI-powered features for students and teachers.',
+    image: '/autodemy/login_screen.png',
+    tech: ['Flutter', 'Node.js', 'MongoDB', 'Firebase'],
+    status: 'Live',
+    url: '#', // Add play store link if available
+  }
+];
+
+
 export const academicProjects = [
   {
     name: 'Creatify Project',
@@ -163,6 +175,67 @@ export const ProjectCard = ({ project }: { project: any }) => (
   </div>
 );
 
+export const MobileProjectCard = ({ project }: { project: any }) => (
+  <div className="group relative bg-transparent rounded-2xl border border-border hover:border-foreground/30 transition-all duration-500 overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+    {/* Phone Mockup */}
+    <div className="relative mx-auto md:mx-0 w-[240px] h-[480px] flex-shrink-0">
+      {/* Phone Case */}
+      <div className="absolute inset-0 bg-neutral-900 rounded-[3rem] border-[8px] border-neutral-800 shadow-2xl overflow-hidden">
+        {/* Screen Content */}
+        <div className="absolute inset-0 bg-white">
+          <img 
+            src={project.image} 
+            alt={project.name} 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        {/* Notch */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-neutral-800 rounded-b-2xl z-20"></div>
+        {/* Home Bar */}
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-20 h-1 bg-neutral-800/20 rounded-full z-20"></div>
+      </div>
+      
+      {/* Decorative Glow */}
+      <div className="absolute -inset-4 bg-gradient-to-tr from-yellow-500/10 to-blue-500/10 blur-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div>
+
+    {/* Project Info */}
+    <div className="flex flex-col justify-center flex-1">
+      <div className="mb-4">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded-full mb-3 inline-block">
+          Mobile Application
+        </span>
+        <h3 className="text-2xl font-bold text-foreground mb-2 italic">
+          {project.name}
+        </h3>
+        <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+          {project.description}
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-8">
+        {project.tech.map((t: string) => (
+          <span key={t} className="text-[10px] font-medium bg-secondary text-secondary-foreground px-2 py-1 rounded-md border border-border/50">
+            {t}
+          </span>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-4">
+        <button className="px-6 py-2.5 bg-foreground text-background rounded-full text-xs font-bold hover:opacity-90 transition-all flex items-center gap-2 group/btn">
+          View Case Study
+          <ChevronRight size={14} className="group-hover/btn:translate-x-0.5 transition-transform" />
+        </button>
+        <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+          {project.status}
+        </span>
+      </div>
+    </div>
+  </div>
+);
+
+
 export function RecentProjects() {
   return (
     <div className="pt-2">
@@ -175,7 +248,17 @@ export function RecentProjects() {
         </Link>
       </div>
 
+      <div className="mb-12">
+        <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
+          Featured Mobile App
+        </h2>
+        {mobileProjects.map((project) => (
+          <MobileProjectCard key={project.name} project={project} />
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
         
         {/* Column 1: System Projects */}
         <div>
