@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 
 export const systemProjects = [
   {
+    name: 'Autodemy',
+    description: 'Smart Academic Management System',
+    url: '/autodemy/app-release.apk',
+    urlLabel: 'Download APK',
+    status: 'Live',
+    hideLink: false,
+  },
+  {
     name: 'Lawbot',
     description: 'AI-Powered Legal Assistant',
     url: 'lawbot-web.vercel.app',
@@ -39,16 +47,7 @@ export const systemProjects = [
   },
 ];
 
-export const mobileProjects = [
-  {
-    name: 'Autodemy',
-    description: 'Smart Academic Management System with AI-powered features for students and teachers.',
-    image: '/autodemy/login_screen.png',
-    tech: ['Flutter', 'Node.js', 'MongoDB', 'Firebase'],
-    status: 'Live',
-    url: '#', // Add play store link if available
-  }
-];
+export const mobileProjects = [];
 
 
 export const academicProjects = [
@@ -163,7 +162,7 @@ export const ProjectCard = ({ project }: { project: any }) => (
       </span>
     ) : (
       <a
-        href={project.url.startsWith('http') ? project.url : `https://${project.url}`}
+        href={project.url.startsWith('http') || project.url.startsWith('/') ? project.url : `https://${project.url}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-500 hover:underline mt-4 inline-block text-xs font-semibold relative z-10"
@@ -248,14 +247,7 @@ export function RecentProjects() {
         </Link>
       </div>
 
-      <div className="mb-12">
-        <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
-          Featured Mobile App
-        </h2>
-        {mobileProjects.map((project) => (
-          <MobileProjectCard key={project.name} project={project} />
-        ))}
-      </div>
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 

@@ -69,6 +69,15 @@ const galleryItems = [
       '/smartcash/Screenshot 2026-04-26 011216.png',
       '/smartcash/Screenshot 2026-04-26 011240.png'
     ]
+  },
+  {
+    title: 'Autodemy',
+    description: 'Smart Academic Management System',
+    thumbnail: '/autodemy/login_screen.png',
+    album: [
+      '/autodemy/login_screen.png'
+    ],
+    downloadUrl: '/autodemy/app-release.apk'
   }
 ];
 
@@ -145,6 +154,18 @@ export function Gallery() {
                 )}
 
                 <div className="relative w-full">
+                  {activeItem.downloadUrl && (
+                    <div className="absolute top-4 right-4 z-50">
+                      <a
+                        href={activeItem.downloadUrl}
+                        download
+                        className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full text-xs font-bold border border-white/20 transition-all flex items-center gap-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Download APK
+                      </a>
+                    </div>
+                  )}
                   <img
                     src={activeItem.album[activeImgIndex]}
                     alt="Project Preview"
