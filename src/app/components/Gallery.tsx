@@ -77,7 +77,7 @@ const galleryItems = [
     album: [
       '/autodemy/login_screen.png'
     ],
-    downloadUrl: '/autodemy/app-release.apk'
+    downloadUrl: 'https://drive.google.com/file/d/1rDC5jv4bWWb6Bi9bAUnzUfEf7VEhd4ww/view?usp=sharing'
   }
 ];
 

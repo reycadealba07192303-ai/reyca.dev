@@ -5,7 +5,7 @@ export const systemProjects = [
   {
     name: 'Autodemy',
     description: 'Smart Academic Management System',
-    url: '/autodemy/app-release.apk',
+    url: 'https://drive.google.com/file/d/1rDC5jv4bWWb6Bi9bAUnzUfEf7VEhd4ww/view?usp=sharing',
     urlLabel: 'Download APK',
     status: 'Live',
     hideLink: false,
