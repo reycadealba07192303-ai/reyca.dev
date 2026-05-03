@@ -39,3 +39,4 @@ brain/
 *.mp4
 
 server/credentials.json
+*.apk
