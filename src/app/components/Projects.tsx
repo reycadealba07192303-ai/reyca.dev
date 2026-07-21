@@ -11,6 +11,38 @@ export const systemProjects = [
     hideLink: false,
   },
   {
+    name: 'SciMathix',
+    description: 'Interactive Science & Math Learning App',
+    url: 'https://drive.google.com/file/d/1bvdDvw-XBT9eycbvW0ReyJe0QSyLXkTv/view?usp=sharing',
+    urlLabel: 'Download APK',
+    status: 'Live',
+    hideLink: false,
+  },
+  {
+    name: 'Admovprog',
+    description: 'Advanced Mobile & Visual Programming App',
+    url: 'https://drive.google.com/file/d/1cvLjRFk2dLKrDWu8DoLY34ASC288T6tc/view?usp=sharing',
+    urlLabel: 'Download APK',
+    status: 'Live',
+    hideLink: false,
+  },
+  {
+    name: 'Crowd Level Tap',
+    description: 'Real-Time Crowd Density Monitoring App',
+    url: 'https://drive.google.com/file/d/1_3yLsMB-wRhKnuClXFl7OW4AWq-TSvxm/view?usp=sharing',
+    urlLabel: 'Download APK',
+    status: 'Live',
+    hideLink: false,
+  },
+  {
+    name: 'InCloud',
+    description: 'Cloud-Based Mobile Application',
+    url: '/apk/incloud.apk',
+    urlLabel: 'Download APK',
+    status: 'Live',
+    hideLink: false,
+  },
+  {
     name: 'Lawbot',
     description: 'AI-Powered Legal Assistant',
     url: 'lawbot-web.vercel.app',
@@ -182,9 +214,9 @@ export const MobileProjectCard = ({ project }: { project: any }) => (
       <div className="absolute inset-0 bg-neutral-900 rounded-[3rem] border-[8px] border-neutral-800 shadow-2xl overflow-hidden">
         {/* Screen Content */}
         <div className="absolute inset-0 bg-white">
-          <img 
-            src={project.image} 
-            alt={project.name} 
+          <img
+            src={project.image}
+            alt={project.name}
             className="w-full h-full object-cover"
           />
         </div>
@@ -193,7 +225,7 @@ export const MobileProjectCard = ({ project }: { project: any }) => (
         {/* Home Bar */}
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-20 h-1 bg-neutral-800/20 rounded-full z-20"></div>
       </div>
-      
+
       {/* Decorative Glow */}
       <div className="absolute -inset-4 bg-gradient-to-tr from-yellow-500/10 to-blue-500/10 blur-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
     </div>
@@ -251,7 +283,7 @@ export function RecentProjects() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-        
+
         {/* Column 1: System Projects */}
         <div>
           <h2 className="text-xl font-bold tracking-tight text-foreground mb-4">

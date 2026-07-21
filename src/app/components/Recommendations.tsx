@@ -32,6 +32,30 @@ const recommendations = [
     text: "Excellent pooo and complete deliverables + minor revision kami pooo. salamat pooo!",
     avatar: 'JG',
   },
+  {
+    name: 'Maui Yorri Angela',
+    role: 'Client',
+    text: "10/10 poo! the app turned out great, and we're satisfied with the final result po nung app. although may parts po na medyo naguluhan po kami pero okay na po since inexplain niyo naman po and tinulungan mo po kami 🥰 thanks din po for helping us! and thank you rin po kasi hindi niyo po kami ghinost HAHAHAHHA thank you, ate reycaa! 💗",
+    avatar: 'MA',
+  },
+  {
+    name: 'Leonah Vasquez',
+    role: 'Client',
+    text: "10/10! the app was so good even though there are some part that we don't get how to use or run properly but ate reyca explain it to us, we saw what we expect for the app and ate reyca add ideas to improve our app. Thnkyou po ate reycaaa! 👌🔥",
+    avatar: 'LV',
+  },
+  {
+    name: 'Danica Mendoza',
+    role: 'Client',
+    text: "10/10 po! Maganda po yung kinalabasan ng app and you even helped us think of some features to add. Mabait ka po samin. Kahit minsan naguguluhan po kami kung pano gamitin yung app, tinuturuan mo po kami. Thank you po ate reyca! 🥰",
+    avatar: 'DM',
+  },
+  {
+    name: 'Elisha Lyla Aicel',
+    role: 'Client',
+    text: "Super thankful to Ate Reyca! 💖 She thinks about the project very critically and offers ideas that actually make the output/vision better pa. She is incredibly honest, reliable, and laging priority yung needs ng client. Overall, quality work 10/10, trust 11/10!",
+    avatar: 'EA',
+  },
 ];
 
 const avatarColors = [

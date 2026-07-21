@@ -2,7 +2,7 @@ import { ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { PortfolioFooter } from '../components/PortfolioFooter';
-import { systemProjects, academicProjects, mobileProjects, ProjectCard, MobileProjectCard } from '../components/Projects';
+import { systemProjects, academicProjects, ProjectCard } from '../components/Projects';
 
 export function ProjectsPage() {
   return (
@@ -28,18 +28,6 @@ export function ProjectsPage() {
         </p>
       </div>
 
-      {/* Featured Mobile Section */}
-      <div className="mb-16">
-        <h2 className="text-foreground font-bold mb-8 text-xl border-b border-border/50 pb-2 flex items-center gap-2">
-          Mobile Applications
-          <span className="text-[10px] font-normal text-muted-foreground uppercase tracking-widest">(Featured)</span>
-        </h2>
-        <div className="flex flex-col gap-8">
-          {mobileProjects.map((project) => (
-            <MobileProjectCard key={project.name} project={project} />
-          ))}
-        </div>
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-12">
         {/* Column 1: System Projects */}
