@@ -65,7 +65,15 @@ const KNOWLEDGE_BASE = {
 3. IntelliAccess: An AI Vehicle Control System.
 4. 903rd Battalion IS: A Record Management System.
 5. InCloud Thesis: An Integrated Cloud-Based Inventory System.
-6. SmartCash: A Financial Literacy Learning Management System.`,
+6. SmartCash: A Financial Literacy Learning Management System.
+7. ACLC SSG Voting System: A student government election platform for ACLC College of Manila (mobile and web).
+8. SineSarili: A Filipino film streaming and showcase platform.
+9. SafetyQuest: A personal safety and disaster preparedness learning system for Grade 4-6 students (mobile app and teacher/admin web dashboard).
+10. AgriFair: An agricultural fair marketplace with an admin web portal and a mobile app for buyers, sellers, and riders.
+11. ACLC Scheduler: A class scheduling and QR attendance system for ACLC College of Manila (mobile and web).
+12. Story Race Game: A gamified reading comprehension platform for Grade 8 students.
+13. GeoApp: A Flutter app that shows nearby places and crowd forecasts using OpenStreetMap.
+14. Whack-a-Bug: An Android arcade game that teaches debugging in HTML, C#, PHP, and JavaScript.`,
   TECH_STACK: `Reyca is proficient in:
 - Frontend: React.js, Vite, Tailwind CSS, Shadcn UI.
 - Backend: Node.js, Express.js, MongoDB, Python (Flask/FastAPI).

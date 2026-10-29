@@ -3,6 +3,126 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 const galleryItems = [
   {
+    title: 'ACLC SSG Voting System',
+    description: 'Election Platform · Mobile & Web',
+    thumbnail: '/voting-system/web-01.jpg',
+    album: [
+      '/voting-system/web-01.jpg',
+      '/voting-system/web-02.jpg',
+      '/voting-system/web-03.jpg',
+      '/voting-system/web-04.jpg',
+      '/voting-system/web-05.jpg',
+      '/voting-system/mobile-01.jpg',
+      '/voting-system/mobile-02.jpg',
+      '/voting-system/mobile-03.jpg',
+      '/voting-system/mobile-04.jpg'
+    ]
+  },
+  {
+    title: 'SineSarili',
+    description: 'Filipino Film Streaming Platform',
+    thumbnail: '/sine-sarili/web-01.jpg',
+    album: [
+      '/sine-sarili/web-01.jpg',
+      '/sine-sarili/web-02.jpg',
+      '/sine-sarili/web-03.jpg',
+      '/sine-sarili/web-04.jpg',
+      '/sine-sarili/web-05.jpg',
+      '/sine-sarili/web-06.jpg',
+      '/sine-sarili/web-07.jpg',
+      '/sine-sarili/web-08.jpg',
+      '/sine-sarili/web-09.jpg',
+      '/sine-sarili/web-10.jpg',
+      '/sine-sarili/web-11.jpg',
+      '/sine-sarili/web-12.jpg'
+    ]
+  },
+  {
+    title: 'SafetyQuest',
+    description: 'Safety Education · Mobile & Web',
+    thumbnail: '/safetyquest/web-01.jpg',
+    album: [
+      '/safetyquest/web-01.jpg',
+      '/safetyquest/web-02.jpg',
+      '/safetyquest/web-03.jpg',
+      '/safetyquest/web-04.jpg',
+      '/safetyquest/web-05.jpg',
+      '/safetyquest/app-screens.png'
+    ]
+  },
+  {
+    title: 'AgriFair',
+    description: 'Agri Fair Marketplace · Mobile & Web',
+    thumbnail: '/agrifair/web-01.jpg',
+    album: [
+      '/agrifair/web-01.jpg',
+      '/agrifair/web-02.jpg',
+      '/agrifair/web-03.jpg',
+      '/agrifair/web-04.jpg',
+      '/agrifair/web-05.jpg',
+      '/agrifair/web-06.jpg',
+      '/agrifair/web-07.jpg',
+      '/agrifair/web-08.jpg'
+    ]
+  },
+  {
+    title: 'ACLC Scheduler',
+    description: 'Scheduling & QR Attendance · Mobile & Web',
+    thumbnail: '/aclc-scheduler/web-01.jpg',
+    album: [
+      '/aclc-scheduler/web-01.jpg',
+      '/aclc-scheduler/web-02.jpg',
+      '/aclc-scheduler/web-03.jpg',
+      '/aclc-scheduler/web-04.jpg',
+      '/aclc-scheduler/web-05.jpg',
+      '/aclc-scheduler/web-06.jpg',
+      '/aclc-scheduler/web-07.jpg',
+      '/aclc-scheduler/web-08.jpg',
+      '/aclc-scheduler/mobile-01.jpg'
+    ]
+  },
+  {
+    title: 'Story Race Game',
+    description: 'Gamified Reading Platform',
+    thumbnail: '/story-race/web-01.jpg',
+    album: [
+      '/story-race/web-01.jpg',
+      '/story-race/web-02.jpg',
+      '/story-race/web-03.jpg',
+      '/story-race/web-04.jpg',
+      '/story-race/web-05.jpg',
+      '/story-race/web-06.jpg'
+    ]
+  },
+  {
+    title: 'GeoApp',
+    description: 'Crowd Forecasts for Nearby Places',
+    thumbnail: '/geoapp/cover.jpg',
+    album: [
+      '/geoapp/cover.jpg',
+      '/geoapp/mobile-01.jpg',
+      '/geoapp/mobile-02.jpg',
+      '/geoapp/mobile-03.jpg',
+      '/geoapp/mobile-04.jpg',
+      '/geoapp/mobile-05.jpg'
+    ],
+    downloadUrl: '/apk/geoapp.apk'
+  },
+  {
+    title: 'Whack-a-Bug',
+    description: 'Debugging Arcade Game',
+    thumbnail: '/whack-a-bug/cover.jpg',
+    album: [
+      '/whack-a-bug/cover.jpg',
+      '/whack-a-bug/mobile-01.jpg',
+      '/whack-a-bug/mobile-02.jpg',
+      '/whack-a-bug/mobile-03.jpg',
+      '/whack-a-bug/mobile-04.jpg',
+      '/whack-a-bug/mobile-05.jpg'
+    ],
+    downloadUrl: 'https://github.com/reycadealba07192303-ai/whack-a-bug/raw/main/dist/Whack-a-Bug-client.apk'
+  },
+  {
     title: 'Gabay Alalay',
     description: 'VAWC Management System',
     thumbnail: '/gabay alalay/15883bf2-e61e-4c5b-a838-eb4abc2d460c.jpg',
