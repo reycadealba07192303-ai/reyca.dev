@@ -1,5 +1,5 @@
-import { ChevronRight, Share2, Target, Cloud, Wifi } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ChevronRight, Share2, Target, Cloud, Wifi, BrainCircuit } from 'lucide-react';
+import Link from 'next/link';
 
 const techStack = [
   {
@@ -11,8 +11,8 @@ const techStack = [
     items: ['Node.js', 'Python', 'Java', 'Express.js', 'Fast API', 'MongoDB', 'Firebase', 'Supabase', 'REST APIs'],
   },
   {
-    category: 'AI & Tools',
-    items: ['Gemini', 'OpenAI', 'MediaPipe', 'PyTorch', 'YOLOv8n', 'Jupyter', 'GitHub', 'Vite'],
+    category: 'AI, ML & Tools',
+    items: ['Machine Learning', 'Gemini', 'OpenAI', 'MediaPipe', 'PyTorch', 'YOLOv8n', 'Jupyter', 'GitHub', 'Vite'],
   },
   {
     category: 'Deployment',
@@ -56,6 +56,7 @@ const getLogo = (name: string) => {
 };
 
 const FallbackIcon = ({ name }: { name: string }) => {
+  if (name === 'Machine Learning') return <BrainCircuit size={16} />;
   if (name === 'MediaPipe') return <Share2 size={16} />;
   if (name === 'YOLOv8n') return <Target size={16} />;
   if (name === 'IoT Systems') return <Cloud size={16} />;
@@ -84,7 +85,7 @@ export function TechStack() {
           Tech Stack
         </h2>
         <Link 
-          to="/tech-stack"
+          href="/tech-stack"
           className="flex items-center gap-1 text-foreground hover:text-muted-foreground transition-colors text-sm font-semibold"
         >
           View All <ChevronRight size={16} />

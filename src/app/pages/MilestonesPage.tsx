@@ -1,10 +1,20 @@
+'use client';
+
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, ExternalLink, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { PortfolioFooter } from '../components/PortfolioFooter';
 
 const certifications = [
+  {
+    name: 'Certificate of Completion - On-the-Job Training',
+    issuer: 'ACLC College of Manila',
+    description: 'Completed on-the-job training at ACLC College of Manila.',
+    image: null,
+    link: null,
+    date: null,
+  },
   {
     name: 'Certificate of Presentation – ReCCIT 2025',
     issuer: 'National University',
@@ -56,6 +66,7 @@ const certifications = [
 ];
 
 const issuerColors: Record<string, string> = {
+  'ACLC College of Manila': 'bg-red-500/10 text-red-500 border-red-500/20',
   'National University': 'bg-blue-500/10 text-blue-500 border-blue-500/20',
   'Fortinet': 'bg-orange-500/10 text-orange-500 border-orange-500/20',
   'Microsoft Learn': 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
@@ -135,7 +146,7 @@ export function MilestonesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-12">
         <Link
-          to="/"
+          href="/"
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium"
         >
           <ChevronLeft size={18} />

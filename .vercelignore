@@ -1,0 +1,15 @@
+.git
+.next
+node_modules
+.env
+.env.*
+!.env.example
+dist
+server
+attached_assets
+guidelines
+.qodo
+output
+*.apk
+*.mp4
+*.tsbuildinfo

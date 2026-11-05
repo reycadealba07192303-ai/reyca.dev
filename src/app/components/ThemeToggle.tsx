@@ -3,7 +3,7 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="flex-shrink-0 w-8 h-8 rounded-md bg-primary flex items-center justify-center text-primary-foreground">
+      <button aria-label="Toggle theme" disabled className="portfolio-theme-toggle">
         <span className="opacity-0">.</span>
       </button>
     );
@@ -20,11 +20,11 @@ export function ThemeToggle() {
 
   return (
     <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="flex-shrink-0 w-8 h-8 rounded-md bg-primary flex items-center justify-center text-primary-foreground hover:opacity-90 transition-opacity"
+      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+      className="portfolio-theme-toggle"
       aria-label="Toggle theme"
     >
-      {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+      {resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
     </button>
   );
 }

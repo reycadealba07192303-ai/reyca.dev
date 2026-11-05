@@ -1,8 +1,15 @@
 import { ChevronRight, ChevronLeft, ExternalLink, X } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const certifications = [
+  {
+    name: 'Certificate of Completion - On-the-Job Training',
+    issuer: 'ACLC College of Manila',
+    description: 'Completed on-the-job training at ACLC College of Manila.',
+    image: null,
+    link: null,
+  },
   {
     name: 'Certificate of Presentation – ReCCIT 2025',
     issuer: 'National University',
@@ -48,11 +55,23 @@ const certifications = [
 ];
 
 
-const experience = [
+type Experience = {
+  role: string;
+  company: string;
+  year?: string;
+  description?: string;
+  images?: string[];
+  link?: string;
+};
+
+const experience: Experience[] = [
+  {
+    role: 'On-the-Job Training Intern',
+    company: 'ACLC College of Manila',
+  },
   {
     role: 'Data Analyst & AI Engineer [Intern]',
     company: 'SPMadrid Law and Associates',
-    year: '2026',
     images: [
       '/c678e0ac-d757-42f8-a698-4c81d2dd8e81.jpg',
       '/b3fe39de-c3cf-4f22-90ce-aa3a894b469a.jpg',
@@ -66,14 +85,14 @@ const experience = [
     images: ['/42e000d5-aa74-4410-96c6-a3acfd7e49a0.jpg']
   },
   {
-    role: 'Academic Freelancer & IT Support',
+    role: 'Academic Commissioner & Software Engineer',
     company: 'Remote Services',
     year: '2022',
     images: ['/647735147_1989301878608686_7666294767600511260_n.jpg'],
     link: 'https://www.facebook.com/share/p/1bjfxm5KJx/'
   },
   {
-    role: 'BS Information Technology Student',
+    role: 'BS Information Technology Studies',
     company: 'National University',
     year: '2022',
     images: ['/476806278_1681388009400076_7588570382732319237_n.jpg']
@@ -165,7 +184,7 @@ export function CertificationsExperience() {
               Milestones
             </h2>
             <Link
-              to="/milestones"
+              href="/milestones"
               className="flex items-center gap-1 text-foreground hover:text-muted-foreground transition-colors text-xs font-semibold uppercase tracking-wider"
             >
               View All <ChevronRight size={14} />
@@ -237,6 +256,11 @@ export function CertificationsExperience() {
                       <p className="text-muted-foreground mt-0.5 text-xs">
                         {item.company}
                       </p>
+                      {item.description && (
+                        <p className="text-muted-foreground/80 mt-1 text-xs leading-relaxed">
+                          {item.description}
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-3">
                       {item.images && (
@@ -244,9 +268,11 @@ export function CertificationsExperience() {
                           <ExternalLink size={12} />
                         </span>
                       )}
-                      <span className="text-muted-foreground/80 flex-shrink-0 text-xs font-bold bg-muted px-2 py-1 rounded-md">
-                        {item.year}
-                      </span>
+                      {item.year && (
+                        <span className="text-muted-foreground/80 flex-shrink-0 text-xs font-bold bg-muted px-2 py-1 rounded-md">
+                          {item.year}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

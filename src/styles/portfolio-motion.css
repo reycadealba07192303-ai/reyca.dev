@@ -1,0 +1,41 @@
+.portfolio-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  color: #fafafa;
+  background: #0c0c0f;
+  /* Reveal the site even if JavaScript never hydrates. */
+  animation: intro-failsafe .45s ease 9s forwards;
+}
+.portfolio-intro--leaving { pointer-events: none; animation: intro-exit .45s cubic-bezier(.76, 0, .24, 1) forwards; }
+.portfolio-intro__identity { position: relative; isolation: isolate; display: grid; place-items: center; width: min(90vw, 900px); min-height: clamp(260px, 45vw, 430px); padding: 12px; animation: intro-arrive .55s ease both; }
+.portfolio-intro__identity::before { content: ''; position: absolute; left: 50%; top: 50%; width: 75%; height: 75%; transform: translate(-50%, -50%); background: radial-gradient(ellipse, #557bff1a, transparent 70%); filter: blur(30px); pointer-events: none; }
+.portfolio-intro__wordmark { position: relative; z-index: 1; display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 3px 14px #08080ccc); }
+.portfolio-intro__wordmark text { font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif; font-size: 115px; font-weight: 650; letter-spacing: -5px; }
+.portfolio-intro__outline { fill: none; stroke: url(#portfolio-intro-gradient); stroke-width: 1.4px; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 240; stroke-dashoffset: 240; animation: intro-trace 1.65s cubic-bezier(.3, .1, .2, 1) forwards; }
+.portfolio-intro__fill { fill: url(#portfolio-intro-gradient); clip-path: inset(0 100% 0 0); animation: intro-fill 1.15s cubic-bezier(.65, 0, .25, 1) .8s forwards; }
+.portfolio-intro__skip { position: absolute; right: 32px; bottom: 28px; display: flex; align-items: center; gap: 16px; padding: 8px 0; font-size: 12px; color: #a1a1aa; transition: color .2s; }
+.portfolio-intro__skip:hover, .portfolio-intro__skip:focus-visible { color: #fff; }
+.portfolio-intro__skip:focus-visible { outline: 1px solid currentColor; outline-offset: 6px; }
+
+.portfolio-cursor { position: fixed; top: 0; left: 0; z-index: 1000; pointer-events: none; opacity: 0; mix-blend-mode: difference; transition: opacity .15s; }
+.portfolio-cursor__ring, .portfolio-cursor__dot { position: absolute; display: block; left: 0; top: 0; transform: translate(-50%, -50%); border-radius: 50%; }
+.portfolio-cursor__ring { width: 30px; height: 30px; border: 1px solid #ffffffa6; transition: width .2s, height .2s, background .2s, border-color .2s; }
+.portfolio-cursor__ring::after { content: ''; position: absolute; top: 1px; right: 1px; width: 4px; height: 4px; border-radius: 1px; background: #fff; transform: rotate(45deg); }
+.portfolio-cursor__dot { width: 4px; height: 4px; background: #fff; transition: width .15s, height .15s; }
+.portfolio-cursor[data-interactive='true'] .portfolio-cursor__ring { width: 46px; height: 46px; border-color: #fff; background: #ffffff15; }
+.portfolio-cursor[data-pressed='true'] .portfolio-cursor__ring { width: 24px; height: 24px; }
+.portfolio-cursor[data-pressed='true'] .portfolio-cursor__dot { width: 6px; height: 6px; }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html[data-portfolio-cursor='true'], html[data-portfolio-cursor='true'] * { cursor: none !important; }
+}
+@media (hover: none), (pointer: coarse) { .portfolio-cursor { display: none; } }
+@media (prefers-reduced-motion: reduce) { .portfolio-intro, .portfolio-cursor { display: none; } }
+@keyframes intro-arrive { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes intro-trace { to { stroke-dashoffset: 0; } }
+@keyframes intro-fill { to { clip-path: inset(0 0 0 0); } }
+@keyframes intro-exit { to { transform: translateY(-100%); visibility: hidden; } }
+@keyframes intro-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }

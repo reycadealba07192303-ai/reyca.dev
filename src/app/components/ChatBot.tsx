@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, X, MessageSquare, Loader2, User, Bot } from 'lucide-react';
 
+// The bot appends a ```BOOKING_DATA``` block for the server; visitors shouldn't see it (even half-streamed)
+const visibleText = (text: string) => text
+  .replace(/```BOOKING_DATA[\s\S]*?(```|$)/, '')
+  .replace(/\*/g, '')
+  .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+  .trim();
+
 export function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [messages, setMessages] = useState<{ role: 'user' | 'bot'; text: string }[]>([
     { role: 'bot', text: "Hi! I'm Reyca's AI assistant. Ask me anything about her work, education, or projects!" }
@@ -29,8 +36,7 @@ export function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
     setMessages(prev => [...prev, { role: 'bot', text: '' }]);
 
     try {
-      const backendUrl = (import.meta as any).env.VITE_BACKEND_URL || 'http://localhost:5000';
-      const response = await fetch(`${backendUrl}/api/chat`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userMessage, conversationId })
@@ -41,21 +47,30 @@ export function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let fullText = "";
+      let buffer = "";
 
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
+          // Keep the trailing partial line for the next read
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? "";
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
+              let data;
               try {
-                const data = JSON.parse(line.slice(6));
-                
-                if (data.chunk) {
+                data = JSON.parse(line.slice(6));
+              } catch (e) {
+                continue; // malformed line, skip
+              }
+
+              if (data.error) throw new Error(data.error);
+
+              if (data.chunk) {
                   fullText += data.chunk;
                   setMessages(prev => {
                     const newMessages = [...prev];
@@ -64,21 +79,23 @@ export function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                   });
                 }
 
-                if (data.conversationId) {
-                  setConversationId(data.conversationId);
-                }
-              } catch (e) {
-                // partial JSON, ignore
+              if (data.conversationId) {
+                setConversationId(data.conversationId);
               }
             }
           }
         }
       }
+
+      if (!fullText) throw new Error('No reply received');
     } catch (error: any) {
       console.error(error);
       setMessages(prev => {
         const newMessages = [...prev];
-        newMessages[newMessages.length - 1] = { role: 'bot', text: `Error: ${error.message}` };
+        newMessages[newMessages.length - 1] = {
+          role: 'bot',
+          text: "Sorry, I can't reply right now. Please try again in a moment, or message Reyca on Messenger: m.me/DealbaReyca072303"
+        };
         return newMessages;
       });
     } finally {
@@ -106,18 +123,18 @@ export function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/10">
-        {messages.map((msg, i) => (
+        {messages.filter((msg) => visibleText(msg.text)).map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${
+            <div className={`max-w-[80%] p-3 rounded-2xl text-sm whitespace-pre-wrap break-words ${
               msg.role === 'user' 
                 ? 'bg-foreground text-background rounded-tr-none' 
                 : 'bg-muted border border-border text-foreground rounded-tl-none'
             }`}>
-              {msg.text}
+              {visibleText(msg.text)}
             </div>
           </div>
         ))}
-        {isLoading && (
+        {isLoading && !visibleText(messages[messages.length - 1]?.text ?? '') && (
           <div className="flex justify-start">
             <div className="bg-muted border border-border text-foreground p-3 rounded-2xl rounded-tl-none">
               <Loader2 size={16} className="animate-spin" />
@@ -146,7 +163,7 @@ export function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
           </button>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-2">
-          Powered by Gemini AI
+          Powered by AI
         </p>
       </div>
     </div>

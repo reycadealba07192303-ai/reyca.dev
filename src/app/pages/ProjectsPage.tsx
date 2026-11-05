@@ -1,5 +1,7 @@
+'use client';
+
 import { ChevronLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { PortfolioFooter } from '../components/PortfolioFooter';
 import { systemProjects, academicProjects, ProjectCard } from '../components/Projects';
@@ -10,7 +12,7 @@ export function ProjectsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-12">
         <Link 
-          to="/" 
+          href="/"
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium"
         >
           <ChevronLeft size={18} />

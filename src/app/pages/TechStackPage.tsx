@@ -1,5 +1,7 @@
-import { ChevronLeft, Share2, Target, Cloud, Wifi } from 'lucide-react';
-import { Link } from 'react-router-dom';
+'use client';
+
+import { ChevronLeft, Share2, Target, Cloud, Wifi, BrainCircuit } from 'lucide-react';
+import Link from 'next/link';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { PortfolioFooter } from '../components/PortfolioFooter';
 
@@ -13,8 +15,8 @@ const techStack = [
     items: ['Node.js', 'Python', 'Java', 'Express.js', 'Fast API', 'MongoDB', 'Firebase', 'Supabase', 'REST APIs'],
   },
   {
-    category: 'AI & Tools',
-    items: ['Gemini', 'OpenAI', 'MediaPipe', 'PyTorch', 'YOLOv8n', 'Jupyter', 'GitHub', 'Vite'],
+    category: 'AI, ML & Tools',
+    items: ['Machine Learning', 'Gemini', 'OpenAI', 'MediaPipe', 'PyTorch', 'YOLOv8n', 'Jupyter', 'GitHub', 'Vite'],
   },
   {
     category: 'Deployment',
@@ -58,6 +60,7 @@ const getLogo = (name: string) => {
 };
 
 const FallbackIcon = ({ name }: { name: string }) => {
+  if (name === 'Machine Learning') return <BrainCircuit size={16} />;
   if (name === 'MediaPipe') return <Share2 size={16} />;
   if (name === 'YOLOv8n') return <Target size={16} />;
   if (name === 'IoT Systems') return <Cloud size={16} />;
@@ -72,7 +75,7 @@ export function TechStackPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-12">
         <Link 
-          to="/" 
+          href="/"
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium"
         >
           <ChevronLeft size={18} />

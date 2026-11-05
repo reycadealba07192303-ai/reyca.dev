@@ -1,5 +1,8 @@
-import { ChevronRight, ExternalLink, Lock, Wrench } from 'lucide-react';
-import { Link } from 'react-router-dom';
+'use client';
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ChevronRight, ArrowLeft, ArrowRight, ArrowUpRight, FileText, Lock, Wrench } from 'lucide-react';
+import Link from 'next/link';
 
 export const systemProjects = [
   {
@@ -231,38 +234,21 @@ export const academicProjects = [
   },
 ];
 
-export const ProjectCard = ({ project }: { project: any }) => (
-  <div className="group relative overflow-hidden rounded-lg border border-border bg-transparent p-5 hover:border-foreground/30 hover:shadow-sm transition-all duration-300 cursor-pointer">
-    <div className="relative z-10 flex items-start justify-between gap-3">
-      <div>
-        <h3 className="text-foreground text-sm font-bold">
-          {project.name}
-        </h3>
-        <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
-          {project.description}
-        </p>
-      </div>
-      <div className="text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0">
-        {!project.hideLink ? <ExternalLink size={14} /> : project.status === 'In Development' ? <Wrench size={14} /> : <Lock size={14} />}
-      </div>
+type Project = { name: string; description: string; url: string; status: string; hideLink: boolean; urlLabel?: string };
+
+export function ProjectCard({ project }: { project: Project }) {
+  const document = project.url.includes('docs.google.com');
+  const contents = <>
+    <div className="project-card__body">
+      <div className="project-card__heading">{document && <FileText size={17} aria-hidden="true" />}<h3>{project.name}</h3><span className="project-card__open" aria-hidden="true">{project.hideLink ? project.status === 'In Development' ? <Wrench size={15} /> : <Lock size={15} /> : <ArrowUpRight size={16} />}</span></div>
+      <p className="project-card__description">{project.description}</p>
+      <div className="project-card__footer">{project.hideLink ? <span className="project-card__private">{project.status === 'In Development' ? 'In development' : 'Private project'}</span> : <span className="project-card__action">{project.urlLabel || (document ? 'Read document' : 'View project')}<ArrowUpRight size={12} aria-hidden="true" /></span>}</div>
     </div>
-    {project.hideLink ? (
-      <span className="text-muted-foreground/70 mt-4 inline-flex items-center gap-1.5 text-xs font-semibold relative z-10 bg-muted/50 px-2 py-1 rounded-sm">
-        {project.status === 'In Development' ? '🚧 In Development' : '🔒 Private Project'}
-      </span>
-    ) : (
-      <a
-        href={project.url.startsWith('http') || project.url.startsWith('/') ? project.url : `https://${project.url}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-500 hover:underline mt-4 inline-block text-xs font-semibold relative z-10"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {project.urlLabel || project.url}
-      </a>
-    )}
-  </div>
-);
+  </>;
+  return project.hideLink
+    ? <article className="project-card">{contents}</article>
+    : <a className="project-card" href={project.url.startsWith('http') || project.url.startsWith('/') ? project.url : `https://${project.url}`} target="_blank" rel="noopener noreferrer" aria-label={`${project.urlLabel?.includes('Download') ? 'Download' : 'View'} ${project.name}`}>{contents}</a>;
+}
 
 export const MobileProjectCard = ({ project }: { project: any }) => (
   <div className="group relative bg-transparent rounded-2xl border border-border hover:border-foreground/30 transition-all duration-500 overflow-hidden flex flex-col md:flex-row gap-6 p-6">
@@ -325,48 +311,95 @@ export const MobileProjectCard = ({ project }: { project: any }) => (
 );
 
 
+const shortDescriptions: Record<string, string> = {
+  'ACLC SSG Voting System': 'A mobile and web platform for student government elections.',
+  SineSarili: 'A platform for streaming and showcasing Filipino films.',
+  SafetyQuest: 'A safety and disaster preparedness learning platform for mobile and web.',
+  AgriFair: 'An agricultural marketplace with mobile apps and a web admin portal.',
+  'ACLC Scheduler': 'Class scheduling and QR attendance for ACLC College of Manila.',
+  'Story Race Game': 'A gamified reading comprehension platform for Grade 8 students.',
+  'Creatify Project': 'Academic paper and documentation for the Creatify project.',
+  EcoVentris: 'Academic paper and project documentation for EcoVentris.',
+  'The Hormuz Chokepoint Analysis': 'An academic analysis of the Hormuz chokepoint.',
+  'InCloud Thesis': 'Thesis documentation for a cloud-based inventory management system.',
+};
+
+// Reuse the actual portfolio screenshots. Projects without a screenshot get a
+// neutral illustration, so a different project's image is never misrepresented.
+const projectArtwork: Record<string, string> = {
+  'ACLC SSG Voting System': '/voting-system/web-01.jpg',
+  SineSarili: '/sine-sarili/web-01.jpg',
+  SafetyQuest: '/safetyquest/web-01.jpg',
+  AgriFair: '/agrifair/web-01.jpg',
+  'ACLC Scheduler': '/aclc-scheduler/web-01.jpg',
+  'Story Race Game': '/story-race/web-01.jpg',
+  GeoApp: '/geoapp/cover.jpg',
+  'Whack-a-Bug': '/whack-a-bug/cover.jpg',
+  Autodemy: '/autodemy/login_screen.png',
+  InCloud: '/InCloud/Screenshot2026-03-01000438.webp',
+  'InCloud Thesis': '/InCloud/Screenshot2026-03-01000438.webp',
+  Lawbot: '/Lawbot/Screenshot 2026-04-26 010822.png',
+  SmartCash: '/smartcash/Screenshot 2026-04-26 011116.png',
+  IntelliAccess: '/Intelliaccess/38975307-95b8-4a00-8329-5801731ca410.jpg',
+};
+
+function ProjectSlide({ project, index, total, academic }: { project: Project; index: number; total: number; academic: boolean }) {
+  const artwork = (!project.hideLink && projectArtwork[project.name]) || `/project-art/${academic ? 'research' : 'system'}.svg`;
+  const content = <>
+    <img className="project-slide__art" src={artwork} alt="" aria-hidden="true" loading="lazy" decoding="async" />
+    <div className="project-slide__top"><span>{academic ? 'RESEARCH' : 'SYSTEM PROJECT'} <i aria-hidden="true">/</i> {String(index + 1).padStart(2, '0')}<span className="project-slide__total"> / {String(total).padStart(2, '0')}</span></span><span className="project-slide__icon" aria-hidden="true">{project.hideLink ? project.status === 'In Development' ? <Wrench size={15} /> : <Lock size={15} /> : <ArrowUpRight size={16} />}</span></div>
+    <div className="project-slide__content"><h3>{project.name}</h3><p>{shortDescriptions[project.name] || project.description}</p></div>
+    <div className="project-slide__bottom"><span>{project.hideLink ? project.status === 'In Development' ? 'In development' : 'Private project' : project.urlLabel || (academic ? 'View document' : 'View project')}</span>{!project.hideLink && <ArrowUpRight size={13} aria-hidden="true" />}</div>
+  </>;
+  const href = project.url.startsWith('http') || project.url.startsWith('/') ? project.url : `https://${project.url}`;
+  return project.hideLink
+    ? <article className="project-slide" data-project-slide>{content}</article>
+    : <a className="project-slide" data-project-slide href={href} target="_blank" rel="noopener noreferrer" aria-label={`${project.urlLabel?.includes('Download') ? 'Download' : 'View'} ${project.name}`}>{content}</a>;
+}
+
 export function RecentProjects() {
+  const [category, setCategory] = useState<'systems' | 'academic'>('systems');
+  const [position, setPosition] = useState({ index: 1, progress: 0, canBack: false, canNext: true });
+  const trackRef = useRef<HTMLDivElement>(null);
+  const projects: Project[] = category === 'systems' ? systemProjects : academicProjects;
+
+  const updatePosition = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const maximum = Math.max(0, track.scrollWidth - track.clientWidth);
+    const first = track.querySelector<HTMLElement>('[data-project-slide]');
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    const step = (first?.offsetWidth || track.clientWidth) + gap;
+    setPosition({ index: Math.min(projects.length, Math.max(1, Math.round(track.scrollLeft / step) + 1)), progress: maximum ? Math.min(100, Math.max(0, ((track.scrollLeft + track.clientWidth) / track.scrollWidth) * 100)) : 100, canBack: track.scrollLeft > 2, canNext: track.scrollLeft < maximum - 2 });
+  }, [projects.length]);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollTo({ left: 0, behavior: 'auto' });
+    updatePosition();
+    const observer = new ResizeObserver(updatePosition);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, [category, updatePosition]);
+
+  const move = (direction: -1 | 1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const first = track.querySelector<HTMLElement>('[data-project-slide]');
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    track.scrollBy({ left: direction * ((first?.offsetWidth || track.clientWidth) + gap), behavior: reduced ? 'auto' : 'smooth' });
+  };
+
   return (
-    <div className="pt-2">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold tracking-tight text-foreground">
-          Recent Projects & Academic Papers
-        </h2>
-        <Link to="/projects" className="flex items-center gap-1 text-foreground hover:text-muted-foreground transition-colors text-sm font-semibold">
-          View All <ChevronRight size={16} />
-        </Link>
+    <div className="project-explorer">
+      <div className="project-explorer__header"><div><h2>Projects<span className="section-heading-dot" aria-hidden="true" /></h2><p>A closer look at the work I've built and explored.</p></div><Link href="/projects" className="project-explorer__all">View All <ChevronRight size={15} /></Link></div>
+      <div className="project-explorer__toolbar"><div className="project-explorer__categories" role="group" aria-label="Project categories"><button type="button" aria-pressed={category === 'systems'} onClick={() => setCategory('systems')}>Systems <span>{systemProjects.length}</span></button><button type="button" aria-label="Academic and thesis projects" aria-pressed={category === 'academic'} onClick={() => setCategory('academic')}>Academic <span>{academicProjects.length}</span></button></div><div className="project-explorer__controls"><button type="button" aria-label="Previous projects" disabled={!position.canBack} onClick={() => move(-1)}><ArrowLeft size={16} /></button><button type="button" aria-label="Next projects" disabled={!position.canNext} onClick={() => move(1)}><ArrowRight size={16} /></button></div></div>
+      <div ref={trackRef} className="project-explorer__track" role="region" aria-label={`${category === 'systems' ? 'System projects' : 'Academic and thesis projects'}, scroll horizontally`} tabIndex={0} onScroll={updatePosition} onKeyDown={event => { if (event.target === event.currentTarget && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) { event.preventDefault(); move(event.key === 'ArrowLeft' ? -1 : 1); } }}>
+        {projects.map((project, index) => <ProjectSlide key={project.name} project={project} index={index} total={projects.length} academic={category === 'academic'} />)}
       </div>
-
-
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-
-        {/* Column 1: System Projects */}
-        <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground mb-4">
-            System Projects
-          </h2>
-          <div className="flex flex-col gap-4">
-            {systemProjects.slice(0, 3).map((project) => (
-              <ProjectCard key={project.name} project={project} />
-            ))}
-          </div>
-        </div>
-
-        {/* Column 2: Academic Projects */}
-        <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground mb-4">
-            Academic & Thesis
-          </h2>
-          <div className="flex flex-col gap-4">
-            {academicProjects.slice(0, 3).map((project) => (
-              <ProjectCard key={project.name} project={project} />
-            ))}
-          </div>
-        </div>
-
-      </div>
+      <div className="project-explorer__under"><span>Scroll to explore <ArrowRight size={12} aria-hidden="true" /></span><span className="project-explorer__progress" aria-hidden="true"><i style={{ width: `${position.progress}%` }} /></span><span className="project-explorer__count">{String(position.index).padStart(2, '0')} <i>/</i> {String(projects.length).padStart(2, '0')}</span></div>
     </div>
   );
 }

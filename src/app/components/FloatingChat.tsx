@@ -1,10 +1,21 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { ChatBot } from './ChatBot';
 
+// Lets other buttons (e.g. the footer's "Chat with Reyca") open the chat
+export const OPEN_CHAT_EVENT = 'open-chat';
+
 export function FloatingChat() {
   const [isVisible, setIsVisible] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
+
+  useEffect(() => {
+    const open = () => setIsChatOpen(true);
+    window.addEventListener(OPEN_CHAT_EVENT, open);
+    return () => window.removeEventListener(OPEN_CHAT_EVENT, open);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
