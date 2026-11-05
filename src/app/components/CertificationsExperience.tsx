@@ -7,7 +7,7 @@ const certifications = [
     name: 'Certificate of Completion - On-the-Job Training',
     issuer: 'ACLC College of Manila',
     description: 'Completed on-the-job training at ACLC College of Manila.',
-    image: null,
+    image: '/aclc-ojt-certificate.jpg',
     link: null,
   },
   {
@@ -68,6 +68,7 @@ const experience: Experience[] = [
   {
     role: 'On-the-Job Training Intern',
     company: 'ACLC College of Manila',
+    images: ['/aclc-ojt-certificate.jpg'],
   },
   {
     role: 'Data Analyst & AI Engineer [Intern]',

@@ -11,7 +11,7 @@ const certifications = [
     name: 'Certificate of Completion - On-the-Job Training',
     issuer: 'ACLC College of Manila',
     description: 'Completed on-the-job training at ACLC College of Manila.',
-    image: null,
+    image: '/aclc-ojt-certificate.jpg',
     link: null,
     date: null,
   },
