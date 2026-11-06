@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ArrowUpRight, Code2, Layers3, MapPin, MonitorSmartphone, QrCode, RotateCcw } from 'lucide-react';
 
 const highlights = [
-  { value: '4 Years', label: 'Freelance Experience', icon: Code2 },
+  { value: '4 Years', label: 'Freelance Dev Exp', icon: Code2 },
   { value: 'Web & Mobile', label: 'App Development', icon: MonitorSmartphone },
   { value: 'Full-Stack', label: 'Web Development', icon: Layers3 },
   { value: '20+', label: 'Production Systems', icon: ArrowUpRight },
