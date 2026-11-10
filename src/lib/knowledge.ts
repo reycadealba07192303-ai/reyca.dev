@@ -16,6 +16,7 @@ const KNOWLEDGE_BASE = {
 12. Story Race Game: A gamified reading comprehension platform for Grade 8 students.
 13. GeoApp: A Flutter app that shows nearby places and crowd forecasts using OpenStreetMap.
 14. Whack-a-Bug: An Android arcade game that teaches debugging in HTML, C#, PHP, and JavaScript.
+15. GeoFlora: A web platform where researchers and communities identify invasive plants from a photo using AI, pin where they grow, and build a reviewer-verified map of Philippine flora (geoflora-ph.vercel.app).
 Live demo links and Android APK downloads for these projects are on the Projects page (/projects) and in the Project Gallery on this website.`,
   TECH_STACK: `Reyca is proficient in:
 - Frontend: React.js, Next.js, Vite, Tailwind CSS, Shadcn UI.

@@ -6,6 +6,13 @@ import Link from 'next/link';
 
 export const systemProjects = [
   {
+    name: 'GeoFlora',
+    description: 'AI Invasive Plant Identification & Mapping',
+    url: 'geoflora-ph.vercel.app',
+    status: 'Live',
+    hideLink: false,
+  },
+  {
     name: 'ACLC SSG Voting System',
     description: 'Student Government Election Platform (Mobile & Web)',
     url: 'voting-system-aclc.vercel.app',
@@ -312,6 +319,7 @@ export const MobileProjectCard = ({ project }: { project: any }) => (
 
 
 const shortDescriptions: Record<string, string> = {
+  GeoFlora: 'Identify invasive plants from a photo and map verified sightings across the Philippines.',
   'ACLC SSG Voting System': 'A mobile and web platform for student government elections.',
   SineSarili: 'A platform for streaming and showcasing Filipino films.',
   SafetyQuest: 'A safety and disaster preparedness learning platform for mobile and web.',
@@ -327,6 +335,7 @@ const shortDescriptions: Record<string, string> = {
 // Reuse the actual portfolio screenshots. Projects without a screenshot get a
 // neutral illustration, so a different project's image is never misrepresented.
 const projectArtwork: Record<string, string> = {
+  GeoFlora: '/geoflora/web-01.jpg',
   'ACLC SSG Voting System': '/voting-system/web-01.jpg',
   SineSarili: '/sine-sarili/web-01.jpg',
   SafetyQuest: '/safetyquest/web-01.jpg',

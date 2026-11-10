@@ -3,6 +3,19 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 const galleryItems = [
   {
+    title: 'GeoFlora',
+    description: 'AI Invasive Plant Mapping',
+    thumbnail: '/geoflora/web-01.jpg',
+    album: [
+      '/geoflora/web-01.jpg',
+      '/geoflora/web-02.jpg',
+      '/geoflora/web-03.jpg',
+      '/geoflora/web-04.jpg',
+      '/geoflora/web-05.jpg',
+      '/geoflora/web-06.jpg'
+    ]
+  },
+  {
     title: 'ACLC SSG Voting System',
     description: 'Election Platform · Mobile & Web',
     thumbnail: '/voting-system/web-01.jpg',
